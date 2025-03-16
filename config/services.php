@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'petstore' => [
+        'base_url' => env('PETSTORE_BASE_URL', 'https://petstore.swagger.io'),
+        'api-key' => env('PETSTORE_API_KEY', 'special-key'),
+    ]
+
 ];

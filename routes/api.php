@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/test', function (\App\PetStore\PetStoreApi $api) {
+    dump($api->findPetsByStatus(\App\PetStore\PetStatus::PENDING));
+});
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
