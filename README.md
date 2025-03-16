@@ -15,7 +15,6 @@ This guide assumes you are using Laravel Sail to run the application and a Linux
 You can check this value by running this commands `id -u` and `id -g`
 5. Optional) Create a bash alias for Laravel Sail (the rest of the steps assume you've done this; if not, replace these commands with ./vendor/bin/sail):
 `alias sail="$HOME/$PROJECT_DIR/vendor/bin/sail` (Replace $PROJECT_DIR with the path to your project directory). You might want to add this alias to the .bashrc file in your home directory so that it is automatically added at terminal startup.
-on terminal startup.
 6. Build containers: `sail build`
 7. Run containers as daemon `sail up -d`
 8. Generate application encryption key `sail artisan key:generate`
