@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Arr;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -23,8 +24,24 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (Throwable $e) {
+            if ($e instanceof PetStoreApiException) {
+                if ($e->getStatusCode() === 400) {
+                    return redirect()->to(route('pets.index'))->withErrors([
+                        'error' => Arr::get($e->getBody(), 'message') ?? 'Bad request.',
+                    ]);
+                }
+                if ($e->getStatusCode() === 404) {
+                    return redirect()->to(route('pets.index'))->withErrors([
+                        'error' => Arr::get($e->getBody(), 'message') ?? 'Resource not found.',
+                    ]);
+                }
+                else {
+                    return redirect()->to(route('pets.index'))->withErrors([
+                        'error' => 'Unexpected error. Please try again later.',
+                    ]);
+                }
+            }
         });
     }
 }

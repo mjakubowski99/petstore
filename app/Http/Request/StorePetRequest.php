@@ -5,7 +5,7 @@ namespace App\Http\Request;
 use App\Contracts\PetStore\ICategory;
 use App\Contracts\PetStore\IPet;
 use App\Contracts\PetStore\ITag;
-use App\PetStore\PetStatus;
+use App\Descriptors\PetStatus;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePetRequest extends FormRequest implements IPet
@@ -14,16 +14,12 @@ class StorePetRequest extends FormRequest implements IPet
     {
         return [
             'name' => ['required', 'string'],
-            'photoUrls' => ['required', 'array'],
             'status' => ['required', 'string'],
-            'tags' => ['nullable', 'array'],
-            'tags.*.id' => ['required', 'integer'],
-            'tags.*.name' => ['required', 'string'],
-            'category.id' => ['required', 'integer'],
-            'category.name' => ['required', 'string'],
+            'photos' => ['nullable', 'string'],
+            'tags' => ['nullable', 'string'],
+            'category_name' => ['nullable', 'string'],
         ];
     }
-
 
     public function getId(): int
     {
@@ -42,41 +38,41 @@ class StorePetRequest extends FormRequest implements IPet
 
     public function getCategory(): ?ICategory
     {
-        return $this->input('category') ? new class ($this->input('category')) implements ICategory
+        return $this->input('category_name') ? new class ($this->input('category_name')) implements ICategory
         {
             public function __construct(
-                private array $category
+                private string $category_name
             ) {}
 
             public function getId(): int
             {
-                return $this->category['id'];
+                return 0;
             }
 
             public function getName(): string
             {
-                return $this->category['name'];
+                return $this->category_name;
             }
         } : null;
     }
 
     public function getTags(): array
     {
-        $tags = $this->input('tags');
+        $tags = explode(',', $this->input('tags', []));
         $result = [];
 
         foreach ($tags as $tag) {
             $result[] = new class ($tag) implements ITag
             {
-                public function __construct(private array $tag) {}
+                public function __construct(private string $tag) {}
                 public function getId(): int
                 {
-                    return $this->tag['id'];
+                    return 0;
                 }
 
                 public function getName(): string
                 {
-                    return $this->tag['name'];
+                    return $this->tag;
                 }
             };
         }
@@ -86,6 +82,6 @@ class StorePetRequest extends FormRequest implements IPet
 
     public function getPhotoUrls(): array
     {
-        return $this->input('photoUrls');
+        return explode(',', $this->input('photos'));
     }
 }

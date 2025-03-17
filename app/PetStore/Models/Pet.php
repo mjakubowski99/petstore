@@ -5,7 +5,7 @@ namespace App\PetStore\Models;
 use App\Contracts\PetStore\ICategory;
 use App\Contracts\PetStore\IPet;
 use App\Contracts\PetStore\ITag;
-use App\PetStore\PetStatus;
+use App\Descriptors\PetStatus;
 
 class Pet implements IPet
 {

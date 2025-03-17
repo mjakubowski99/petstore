@@ -1,70 +1,86 @@
-{{-- resources/views/pet/index.blade.php --}}
-    <!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pets List</title>
-    <!-- Dodanie CDN Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-<div class="container mt-5">
-    <h1>Lista Zwierząt</h1>
+@extends('pets.layout')
 
-    <!-- Tabela z informacjami o zwierzętach -->
-    <table class="table table-striped table-bordered">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Status</th>
-            <th>Category</th>
-            <th>Tags</th>
-            <th>Photos</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($pets as $pet)
-            <tr>
-                <!-- ID -->
-                <td>{{ $pet->getId() }}</td>
+@section('content')
+    @if ($errors->any())
+        <div style="color: red; padding: 10px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 5px;">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-                <!-- Name -->
-                <td>{{ $pet->getName() }}</td>
+    @if(isset($error_message))
+        <div style="color: red; padding: 10px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 5px;">
+            {{ $error_message }}
+        </div>
+    @endif
 
-                <!-- Status -->
-                <td>{{ $pet->getStatus() }}</td> <!-- Assuming getStatus() returns an object with getName() -->
+    <div class="container mb-3 text-end">
+        <a href="{{route('pets.create')}}" class="btn btn-primary">Dodaj Zwierzę</a>
+    </div>
 
-                <!-- Category -->
-                <td>
-                    @if($pet->getCategory())
-                        {{ $pet->getCategory()->getName() }}
-                    @else
-                        No category assigned
-                    @endif
-                </td>
-
-                <!-- Tags -->
-                <td>
-                    @foreach($pet->getTags() as $tag)
-                        {{ $tag->getName() }} @if(!$loop->last), @endif
-                    @endforeach
-                </td>
-
-                <!-- Photos -->
-                <td>
-                    @foreach($pet->getPhotoUrls() as $url)
-                        <img src="{{ $url }}" alt="Pet photo" width="50" height="50" />
-                    @endforeach
-                </td>
-            </tr>
+    <div class="container mb-3">
+        Pets by status:
+        @foreach($statuses as $status)
+            <a href="{{route('pets.index') . '?status=' . $status}}" class="btn {{$status === $current_status ? 'btn-danger' : 'btn-primary'}}">{{$status}}</a>
         @endforeach
-        </tbody>
-    </table>
-</div>
+    </div>
 
-<!-- Dodanie skryptów Bootstrap -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    <div class="w-75 mx-auto">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Category</th>
+                <th>Tags</th>
+                <th>Photos</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($pets as $pet)
+                <tr>
+                    <td>{{ $pet->getId() }}</td>
+
+                    <td>{{ $pet->getName() }}</td>
+
+                    <td>{{ $pet->getStatus() }}</td>
+
+                    <td>
+                        @if($pet->getCategory())
+                            {{ $pet->getCategory()->getName() }}
+                        @else
+                            No category assigned
+                        @endif
+                    </td>
+
+                    <td>
+                        @foreach($pet->getTags() as $tag)
+                            {{ $tag->getName() }} @if(!$loop->last), @endif
+                        @endforeach
+                    </td>
+
+                    <td>
+                        @foreach($pet->getPhotoUrls() as $url)
+                            <img src="{{ $url }}" alt="Pet photo" width="50" height="50" />
+                        @endforeach
+                    </td>
+
+                    <td>
+                        <a href="{{ route('pets.edit', $pet->getId()) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <form action="{{ route('pets.destroy', $pet->getId()) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this pet?');">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
+@endsection

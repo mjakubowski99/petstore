@@ -2,7 +2,7 @@
 
 namespace App\Http\Request;
 
-use App\PetStore\PetStatus;
+use App\Descriptors\PetStatus;
 use Illuminate\Foundation\Http\FormRequest;
 
 class IndexPetByStatusRequest extends FormRequest
@@ -16,6 +16,8 @@ class IndexPetByStatusRequest extends FormRequest
 
     public function getPetStatus(): PetStatus
     {
-        return $this->input('status', PetStatus::PENDING);
+        $status = $this->input('status', PetStatus::DEFAULT->value);
+
+        return PetStatus::from($status);
     }
 }

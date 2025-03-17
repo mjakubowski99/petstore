@@ -2,7 +2,7 @@
 
 namespace App\Contracts\PetStore;
 
-use App\PetStore\PetStatus;
+use App\Descriptors\PetStatus;
 
 interface IPet
 {
