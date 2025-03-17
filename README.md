@@ -18,6 +18,7 @@ You can check this value by running this commands `id -u` and `id -g`
 6. Build containers: `sail build`
 7. Run containers as daemon `sail up -d`
 8. Generate application encryption key `sail artisan key:generate`
+9. Access application: http://localhost 
 
 ### Useful commands
 1. Run tests ```sail test```
