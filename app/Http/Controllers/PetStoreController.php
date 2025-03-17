@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Contracts\PetStore\IPetStoreApi;
@@ -9,7 +11,6 @@ use App\Http\Request\EditPetRequest;
 use App\Http\Request\IndexPetByStatusRequest;
 use App\Http\Request\StorePetRequest;
 use App\Http\Request\UpdatePetRequest;
-use App\Http\Request\UploadImageRequest;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 
@@ -52,7 +53,7 @@ class PetStoreController extends Controller
         return redirect()->to(route('pets.edit', ['petId' => $pet->getId()]));
     }
 
-    public function edit(EditPetRequest $request)
+    public function edit(EditPetRequest $request): View
     {
         $pet = $this->api->findById($request->getId());
 
@@ -65,13 +66,6 @@ class PetStoreController extends Controller
     public function update(UpdatePetRequest $request): RedirectResponse
     {
         $this->api->updatePet($request);
-
-        return redirect()->to(route('pets.edit', ['petId' => $request->getId()]));
-    }
-
-    public function uploadImage(UploadImageRequest $request): RedirectResponse
-    {
-        $this->api->uploadPetImage($request->getId(), $request->getFile());
 
         return redirect()->to(route('pets.edit', ['petId' => $request->getId()]));
     }

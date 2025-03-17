@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\PetStore;
 
 use App\PetStore\Contracts\IPetStoreApiClient;
@@ -7,7 +9,6 @@ use App\PetStore\Contracts\IResponse;
 use App\PetStore\Models\Response;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Http\Client\PendingRequest;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 

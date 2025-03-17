@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Request;
 
 use App\Contracts\PetStore\ICategory;
@@ -58,7 +60,7 @@ class StorePetRequest extends FormRequest implements IPet
 
     public function getTags(): array
     {
-        $tags = explode(',', $this->input('tags', []));
+        $tags = explode(',', $this->input('tags') ?? '');
         $result = [];
 
         foreach ($tags as $tag) {
@@ -82,6 +84,6 @@ class StorePetRequest extends FormRequest implements IPet
 
     public function getPhotoUrls(): array
     {
-        return explode(',', $this->input('photos'));
+        return explode(',', $this->input('photos') ?? '');
     }
 }
